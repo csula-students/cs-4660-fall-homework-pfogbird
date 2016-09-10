@@ -7,7 +7,7 @@ import java.io.File;
 
 import static org.junit.Assert.*;
 
-/**
+/**C:\Users\pfogbird\Documents\cs-4660-fall-homework-pfogbird\src\main\resources\array.txt
  * A simple text for your exercise
  */
 public class FileReadTest {

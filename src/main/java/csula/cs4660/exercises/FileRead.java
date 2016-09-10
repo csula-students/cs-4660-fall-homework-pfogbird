@@ -23,18 +23,30 @@ public class FileRead {
      * lineNumber starts with 0 (programming friendly!)
      */
     public int mean(int lineNumber) {
+
+
+
         return 0;
     }
 
     public int max(int lineNumber) {
+
+
+
         return 0;
     }
 
     public int min(int lineNumber) {
+
+
+
         return 0;
     }
 
     public int sum(int lineNumber) {
+
+
+
         return 0;
     }
 }
