@@ -30,6 +30,8 @@ public class ObjectOriented implements Representation {
             System.out.println("File ain't there.");
         }
 
+
+
         try {
             Scanner input = new Scanner(file);
             String [] members;
@@ -60,13 +62,12 @@ public class ObjectOriented implements Representation {
 
                 Edge newEdge = new Edge(fromNode,toNode,weight);
                 edges.add(newEdge);
-                System.out.println("Hey there ");
+
 
                 graphNetwork.put(fromNode, edges);
 
             }
-            //System.out.println("Testing");
-            System.out.println("Values" + graphNetwork.values());
+
 
         } catch (FileNotFoundException e) {
 
