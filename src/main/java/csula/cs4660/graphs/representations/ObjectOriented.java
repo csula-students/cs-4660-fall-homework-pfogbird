@@ -19,7 +19,7 @@ public class ObjectOriented implements Representation {
     //private Collection<Edge> edges = new ArrayList<>();
     private ArrayList<Node> nodes = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
-    private HashMap<Node, ArrayList<Edge>> graphNetwork;
+    private HashMap<Node, ArrayList<Edge>> graphNetwork = new HashMap<>();
 
     public ObjectOriented(File file) {
 
@@ -37,8 +37,17 @@ public class ObjectOriented implements Representation {
 
             int numNodes = Integer.parseInt(line);
 
-            Node newNode = new Node(numNodes);
-            nodes.add(newNode);
+            graphNetwork = new HashMap<>();
+
+            //Node newNode = new Node(numNodes);
+            //nodes.add(newNode);
+
+        /*    for (int i = 0; i < numNodes; i++) {
+
+                Node temp = new Node(i);
+                graphNetwork.put(temp, edges);
+
+            }     */
 
             while (input.hasNextLine()) {
 
@@ -51,11 +60,13 @@ public class ObjectOriented implements Representation {
 
                 Edge newEdge = new Edge(fromNode,toNode,weight);
                 edges.add(newEdge);
+                System.out.println("Hey there ");
 
-
-                graphNetwork.put(newNode, edges);
+                graphNetwork.put(fromNode, edges);
 
             }
+            //System.out.println("Testing");
+            System.out.println("Values" + graphNetwork.values());
 
         } catch (FileNotFoundException e) {
 
