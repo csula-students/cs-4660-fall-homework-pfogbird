@@ -80,6 +80,9 @@ public class ObjectOriented implements Representation {
 
     public ObjectOriented() {
 
+
+
+
     }
 
     @Override
