@@ -23,13 +23,13 @@ public class ObjectOriented implements Representation {
 
     public ObjectOriented(File file) {
 
-        if(file.exists()) {
+     /*   if(file.exists()) {
             System.out.println("File exists.");
         }
         else {
             System.out.println("File ain't there.");
         }
-
+    */
 
 
         try {
@@ -60,11 +60,33 @@ public class ObjectOriented implements Representation {
                 Node fromNode = new Node(members[0]);
                 Node toNode = new Node(members[1]);
 
-                Edge newEdge = new Edge(fromNode,toNode,weight);
-                edges.add(newEdge);
+                nodes.add(fromNode);
+                nodes.add(toNode);
+
+                if(!graphNetwork.containsKey(fromNode)) {
+
+                    edges = new ArrayList<>();
+                    edges.add(new Edge(fromNode, toNode, weight));
+                    graphNetwork.put(fromNode, edges);
+
+                }
+                else {
+
+                    edges = graphNetwork.get(fromNode);
+                    edges.add(new Edge(fromNode, toNode, weight));
 
 
-                graphNetwork.put(fromNode, edges);
+                }
+
+            }
+
+            for (Node n: graphNetwork.keySet()) {
+
+                for (Edge e: graphNetwork.get(n)) {
+
+                    System.out.println(e);
+
+                }
 
             }
 
