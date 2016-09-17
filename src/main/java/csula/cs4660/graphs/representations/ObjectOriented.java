@@ -158,9 +158,16 @@ public class ObjectOriented implements Representation {
     @Override
     public int distance(Node from, Node to) {
 
+        int distance = 0;
+
+        for (Edge e: edges) {
+            if (from.equals(e.getFrom()) && to.equals(e.getTo())) {
+                distance = e.getValue();
+            }
+        }
 
 
-        return 0;
+        return distance;
     }
 
     @Override
