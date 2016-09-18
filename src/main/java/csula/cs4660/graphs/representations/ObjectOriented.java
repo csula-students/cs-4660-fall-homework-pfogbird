@@ -5,8 +5,11 @@ import csula.cs4660.graphs.Node;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Optional;
 
 /**
  * Object oriented representation of graph is using OOP approach to store nodes
@@ -15,45 +18,21 @@ import java.io.*;
  * TODO: Please fill the body of methods in this class
  */
 public class ObjectOriented implements Representation {
-    //private Collection<Node> nodes = new ArrayList<>();
-    //private Collection<Edge> edges = new ArrayList<>();
+
     private ArrayList<Node> nodes = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
     private HashMap<Node, ArrayList<Edge>> graphNetwork = new HashMap<>();
 
     public ObjectOriented(File file) {
 
-     /*   if(file.exists()) {
-            System.out.println("File exists.");
-        }
-        else {
-            System.out.println("File ain't there.");
-        }
-    */
-
-
         try {
-            Scanner input = new Scanner(file);
+            Scanner scanner = new Scanner(file);
             String [] members;
-            String line = input.nextLine();
+            String line = scanner.nextLine();
 
-            int numNodes = Integer.parseInt(line);
+            while (scanner.hasNextLine()) {
 
-            graphNetwork = new HashMap<>();
-
-            //Node newNode = new Node(numNodes);
-            //nodes.add(newNode);
-
-        /*    for (int i = 0; i < numNodes; i++) {
-
-                Node temp = new Node(i);
-                graphNetwork.put(temp, edges);
-
-            }     */
-
-            while (input.hasNextLine()) {
-
-                line = input.nextLine();
+                line = scanner.nextLine();
                 members = line.split(":");
                 int weight = Integer.parseInt(members[2]);
 
@@ -65,7 +44,6 @@ public class ObjectOriented implements Representation {
 
                 if(!graphNetwork.containsKey(fromNode)) {
 
-                    edges = new ArrayList<>();
                     edges.add(new Edge(fromNode, toNode, weight));
                     graphNetwork.put(fromNode, edges);
 
@@ -74,7 +52,6 @@ public class ObjectOriented implements Representation {
 
                     edges = graphNetwork.get(fromNode);
                     edges.add(new Edge(fromNode, toNode, weight));
-
 
                 }
 
@@ -90,27 +67,33 @@ public class ObjectOriented implements Representation {
 
             }
 
-
         } catch (FileNotFoundException e) {
 
             System.out.println("There was an error.");
 
         }
 
-
     }
 
     public ObjectOriented() {
-
-
-
-
     }
 
     @Override
     public boolean adjacent(Node x, Node y) {
 
+        ArrayList<Node> adjacentNodes = new ArrayList<>();
 
+        for (Edge e: graphNetwork.get(x)) {
+
+            adjacentNodes.add(e.getTo());
+
+        }
+
+        for (Edge e: graphNetwork.get(y)) {
+
+            adjacentNodes.add(e.getTo());
+
+        }
 
         return false;
     }
@@ -118,23 +101,29 @@ public class ObjectOriented implements Representation {
     @Override
     public List<Node> neighbors(Node x) {
 
+        ArrayList<Node> neighborNodes = new ArrayList<>();
 
+        for (Edge e: graphNetwork.get(x)) {
 
-        return null;
+            neighborNodes.add(e.getTo());
+
+        }
+
+        return neighborNodes;
     }
 
     @Override
     public boolean addNode(Node x) {
+        edges = new ArrayList<>();
+        graphNetwork.put(x, edges);
 
-
-
-        return false;
+        return graphNetwork.containsKey(x);
     }
 
     @Override
     public boolean removeNode(Node x) {
 
-
+        graphNetwork.remove(x);
 
         return false;
     }
@@ -142,17 +131,30 @@ public class ObjectOriented implements Representation {
     @Override
     public boolean addEdge(Edge x) {
 
+        Node from = x.getFrom();
+        graphNetwork.get(from).add(x);
 
-
-        return false;
+        if(graphNetwork.get(from).contains(x) == true){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     @Override
     public boolean removeEdge(Edge x) {
 
+        Node from = x.getFrom();
+        graphNetwork.get(from).remove(x);
 
 
-        return false;
+        if(graphNetwork.get(from).contains(x) == true){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     @Override
@@ -163,12 +165,13 @@ public class ObjectOriented implements Representation {
         for (Edge e: edges) {
             if (from.equals(e.getFrom()) && to.equals(e.getTo())) {
                 distance = e.getValue();
+                System.out.println(distance);
             }
         }
 
 
         return distance;
-    }
+}
 
     @Override
     public Optional<Node> getNode(int index) {
