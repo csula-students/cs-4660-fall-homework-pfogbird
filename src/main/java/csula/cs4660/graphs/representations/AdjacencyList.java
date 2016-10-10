@@ -6,12 +6,7 @@ import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
 import java.io.FileNotFoundException;
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Adjacency list is probably the most common implementation to store the unknown
@@ -20,7 +15,7 @@ import java.util.ArrayList;
  * TODO: please implement the method body
  */
 public class AdjacencyList implements Representation {
-    private Map<Node, Collection<Edge>> adjacencyList;
+    private Map<Node, List<Edge>> adjacencyList;
     private Multimap<Node, Edge> multiMap = ArrayListMultimap.create();
     private ArrayList<Node> nodes = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
@@ -55,26 +50,13 @@ public class AdjacencyList implements Representation {
 
     }
 
-    public AdjacencyList() {
-
+    protected AdjacencyList() {
+        adjacencyList = new HashMap<>();
     }
 
     @Override
     public boolean adjacent(Node x, Node y) {
 
-        ArrayList<Node> adjacentNodes = new ArrayList<>();
-
-        for (Edge e: multiMap.get(x)) {
-
-            adjacentNodes.add(e.getTo());
-
-        }
-
-        for (Edge e: multiMap.get(y)) {
-
-            adjacentNodes.add(e.getTo());
-
-        }
 
         return false;
     }
@@ -91,13 +73,11 @@ public class AdjacencyList implements Representation {
     public boolean addNode(Node x) {
 
 
-
         return false;
     }
 
     @Override
     public boolean removeNode(Node x) {
-
 
 
         return false;
@@ -114,15 +94,7 @@ public class AdjacencyList implements Representation {
     @Override
     public boolean removeEdge(Edge x) {
 
-        Node from = x.getFrom();
-        multiMap.get(from).remove(x);
-
-        if(multiMap.get(from).contains(x) == true){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return adjacencyList.get(x.getFrom()).remove(x);
 
     }
 

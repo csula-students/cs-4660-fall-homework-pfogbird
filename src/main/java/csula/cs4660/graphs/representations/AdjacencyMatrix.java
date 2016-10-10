@@ -4,6 +4,7 @@ import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -19,14 +20,25 @@ public class AdjacencyMatrix implements Representation {
     private Node[] nodes;
     private int[][] adjacencyMatrix;
 
-    public AdjacencyMatrix(File file) {
+    protected AdjacencyMatrix(File file) {
+
+        try{
+            Scanner scanner = new Scanner(file);
+            int size = Integer.parseInt(scanner.nextLine());
+
+            nodes = new Node[size];
 
 
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
 
     }
 
-    public AdjacencyMatrix() {
-
+    protected AdjacencyMatrix() {
+        nodes = new Node[0];
+        adjacencyMatrix = new int[0][0];
     }
 
     @Override

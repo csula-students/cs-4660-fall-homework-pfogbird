@@ -19,54 +19,33 @@ import java.util.Optional;
  */
 public class ObjectOriented implements Representation {
 
-    private ArrayList<Node> nodes = new ArrayList<>();
-    private ArrayList<Edge> edges = new ArrayList<>();
-    private HashMap<Node, ArrayList<Edge>> graphNetwork = new HashMap<>();
+    private List<Node> nodes;
+    private List<Edge> edges;
 
-    public ObjectOriented(File file) {
+
+    protected ObjectOriented(File file) {
+
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
 
         try {
             Scanner scanner = new Scanner(file);
-            String [] members;
-            String line = scanner.nextLine();
 
             while (scanner.hasNextLine()) {
 
-                line = scanner.nextLine();
-                members = line.split(":");
+                String line = scanner.nextLine();
+                String [] members = line.split(":");
                 int weight = Integer.parseInt(members[2]);
 
                 Node fromNode = new Node(members[0]);
                 Node toNode = new Node(members[1]);
 
+
                 nodes.add(fromNode);
                 nodes.add(toNode);
 
-                if(!graphNetwork.containsKey(fromNode)) {
-
-                    edges.add(new Edge(fromNode, toNode, weight));
-                    graphNetwork.put(fromNode, edges);
-
-                }
-                else {
-
-                    edges = graphNetwork.get(fromNode);
-                    edges.add(new Edge(fromNode, toNode, weight));
-
-                }
 
             }
-
-            for (Node n: graphNetwork.keySet()) {
-
-                for (Edge e: graphNetwork.get(n)) {
-
-                    System.out.println(e);
-
-                }
-
-            }
-
         } catch (FileNotFoundException e) {
 
             System.out.println("There was an error.");
@@ -75,24 +54,20 @@ public class ObjectOriented implements Representation {
 
     }
 
-    public ObjectOriented() {
+    protected ObjectOriented() {
+
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
+
     }
 
     @Override
     public boolean adjacent(Node x, Node y) {
 
-        ArrayList<Node> adjacentNodes = new ArrayList<>();
-
-        for (Edge e: graphNetwork.get(x)) {
-
-            adjacentNodes.add(e.getTo());
-
-        }
-
-        for (Edge e: graphNetwork.get(y)) {
-
-            adjacentNodes.add(e.getTo());
-
+        for(Edge edge: edges){
+            if(edge.getFrom().equals(x) && edge.getTo().equals(y)){
+                return true;
+            }
         }
 
         return false;
@@ -103,7 +78,7 @@ public class ObjectOriented implements Representation {
 
         ArrayList<Node> neighborNodes = new ArrayList<>();
 
-        for (Edge e: graphNetwork.get(x)) {
+        for (Edge e: edges) {
 
             neighborNodes.add(e.getTo());
 
@@ -114,16 +89,20 @@ public class ObjectOriented implements Representation {
 
     @Override
     public boolean addNode(Node x) {
-        edges = new ArrayList<>();
-        graphNetwork.put(x, edges);
 
-        return graphNetwork.containsKey(x);
+        if(nodes.contains(x)){
+            return false;
+        }
+
+        nodes.add(x);
+
+        return true;
     }
 
     @Override
     public boolean removeNode(Node x) {
 
-        graphNetwork.remove(x);
+
 
         return false;
     }
@@ -131,30 +110,17 @@ public class ObjectOriented implements Representation {
     @Override
     public boolean addEdge(Edge x) {
 
-        Node from = x.getFrom();
-        graphNetwork.get(from).add(x);
 
-        if(graphNetwork.get(from).contains(x) == true){
-            return true;
-        }
-        else{
-            return false;
-        }
+
+       return false;
     }
 
     @Override
     public boolean removeEdge(Edge x) {
 
-        Node from = x.getFrom();
-        graphNetwork.get(from).remove(x);
 
 
-        if(graphNetwork.get(from).contains(x) == true){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return edges.remove(x);
     }
 
     @Override
@@ -163,12 +129,11 @@ public class ObjectOriented implements Representation {
         int distance = 0;
 
         for (Edge e: edges) {
-            if (from.equals(e.getFrom()) && to.equals(e.getTo())) {
+            if (e.getFrom().equals(from) && e.getTo().equals(to)) {
                 distance = e.getValue();
-                System.out.println(distance);
+                return distance;
             }
         }
-
 
         return distance;
 }
