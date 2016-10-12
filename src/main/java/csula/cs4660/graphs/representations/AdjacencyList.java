@@ -1,17 +1,13 @@
 package csula.cs4660.graphs.representations;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
 import java.io.FileNotFoundException;
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Adjacency list is probably the most common implementation to store the unknown
@@ -20,8 +16,10 @@ import java.util.ArrayList;
  * TODO: please implement the method body
  */
 public class AdjacencyList implements Representation {
-    private Map<Node, Collection<Edge>> adjacencyList;
-    private Multimap<Node, Edge> multiMap = ArrayListMultimap.create();
+
+
+    private Map<Node, List<Edge>> adjacencyList;
+    //private Multimap<Node, Edge> multiMap = ArrayListMultimap.create();
     private ArrayList<Node> nodes = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
 
@@ -37,14 +35,14 @@ public class AdjacencyList implements Representation {
                 members = line.split(":");
                 int weight = Integer.parseInt(members[2]);
 
-                Node fromNode = new Node(members[0]);
-                Node toNode = new Node(members[1]);
+                Node fromNode = new Node(Integer.parseInt(members[0]));
+                Node toNode = new Node(Integer.parseInt(members[1]));
 
                 nodes.add(fromNode);
                 nodes.add(toNode);
                 Edge edge = new Edge(fromNode,toNode,weight);
 
-                multiMap.put(fromNode, edge);
+                addEdge(edge);
 
             }
 
@@ -55,32 +53,31 @@ public class AdjacencyList implements Representation {
 
     }
 
-    public AdjacencyList() {
-
+    protected AdjacencyList() {
+        adjacencyList = new HashMap<>();
     }
 
     @Override
     public boolean adjacent(Node x, Node y) {
+        boolean result = false;
 
-        ArrayList<Node> adjacentNodes = new ArrayList<>();
+        for (Edge e: adjacencyList.get(x)) {
 
-        for (Edge e: multiMap.get(x)) {
-
-            adjacentNodes.add(e.getTo());
-
-        }
-
-        for (Edge e: multiMap.get(y)) {
-
-            adjacentNodes.add(e.getTo());
+            result = result || e.getTo().equals(y);
 
         }
 
-        return false;
+        return result;
     }
 
     @Override
     public ArrayList<Node> neighbors(Node x) {
+        if (!adjacencyList.containsKey(x)) {
+            return new ArrayList<>();
+        }
+
+        List<Node> result = new ArrayList<>();
+
 
 
 
@@ -106,23 +103,23 @@ public class AdjacencyList implements Representation {
     @Override
     public boolean addEdge(Edge x) {
 
+        if(adjacencyList.containsKey(x.getFrom())) {
+            if(adjacencyList.get(x.getFrom()).contains(x)){
+                return false;
+            }
+            adjacencyList.get(x.getFrom()).add(x);
+        }
+        else {
+            adjacencyList.put(x.getFrom(), Lists.newArrayList(x));
+        }
 
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean removeEdge(Edge x) {
 
-        Node from = x.getFrom();
-        multiMap.get(from).remove(x);
-
-        if(multiMap.get(from).contains(x) == true){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return adjacencyList.get(x.getFrom()).remove(x);
 
     }
 
@@ -134,7 +131,8 @@ public class AdjacencyList implements Representation {
         for (Edge e: edges) {
             if (from.equals(e.getFrom()) && to.equals(e.getTo())) {
                 distance = e.getValue();
-                System.out.println(distance);
+
+                return distance;
             }
         }
 
