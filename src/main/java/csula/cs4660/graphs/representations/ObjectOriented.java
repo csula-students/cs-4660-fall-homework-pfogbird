@@ -37,13 +37,12 @@ public class ObjectOriented implements Representation {
                 String [] members = line.split(":");
                 int weight = Integer.parseInt(members[2]);
 
-                Node fromNode = new Node(members[0]);
-                Node toNode = new Node(members[1]);
+                Node fromNode = new Node(Integer.parseInt(members[0]));
+                Node toNode = new Node(Integer.parseInt(members[1]));
 
 
                 nodes.add(fromNode);
                 nodes.add(toNode);
-
 
             }
         } catch (FileNotFoundException e) {
@@ -101,18 +100,39 @@ public class ObjectOriented implements Representation {
 
     @Override
     public boolean removeNode(Node x) {
+        if(!nodes.contains(x)){
+            return false;
+        }
 
+        for (Edge e: edges) {
 
+            if (e.getTo().equals(x) || e.getFrom().equals(x)) {
+                edges.remove(x);
+            }
 
-        return false;
+        }
+
+        return nodes.remove(x);
     }
 
     @Override
     public boolean addEdge(Edge x) {
 
+        if(!nodes.contains(x.getFrom())){
+            nodes.add(x.getFrom());
+        }
 
+        if(!nodes.contains(x.getTo())){
+            nodes.add(x.getTo());
+        }
 
-       return false;
+        if (edges.contains(x)) {
+            return false;
+        }
+
+        edges.add(x);
+
+       return true;
     }
 
     @Override

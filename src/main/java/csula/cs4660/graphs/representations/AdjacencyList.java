@@ -1,6 +1,7 @@
 package csula.cs4660.graphs.representations;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
@@ -15,8 +16,10 @@ import java.util.*;
  * TODO: please implement the method body
  */
 public class AdjacencyList implements Representation {
+
+
     private Map<Node, List<Edge>> adjacencyList;
-    private Multimap<Node, Edge> multiMap = ArrayListMultimap.create();
+    //private Multimap<Node, Edge> multiMap = ArrayListMultimap.create();
     private ArrayList<Node> nodes = new ArrayList<>();
     private ArrayList<Edge> edges = new ArrayList<>();
 
@@ -32,14 +35,14 @@ public class AdjacencyList implements Representation {
                 members = line.split(":");
                 int weight = Integer.parseInt(members[2]);
 
-                Node fromNode = new Node(members[0]);
-                Node toNode = new Node(members[1]);
+                Node fromNode = new Node(Integer.parseInt(members[0]));
+                Node toNode = new Node(Integer.parseInt(members[1]));
 
                 nodes.add(fromNode);
                 nodes.add(toNode);
                 Edge edge = new Edge(fromNode,toNode,weight);
 
-                multiMap.put(fromNode, edge);
+                addEdge(edge);
 
             }
 
@@ -56,13 +59,25 @@ public class AdjacencyList implements Representation {
 
     @Override
     public boolean adjacent(Node x, Node y) {
+        boolean result = false;
 
+        for (Edge e: adjacencyList.get(x)) {
 
-        return false;
+            result = result || e.getTo().equals(y);
+
+        }
+
+        return result;
     }
 
     @Override
     public ArrayList<Node> neighbors(Node x) {
+        if (!adjacencyList.containsKey(x)) {
+            return new ArrayList<>();
+        }
+
+        List<Node> result = new ArrayList<>();
+
 
 
 
@@ -73,11 +88,13 @@ public class AdjacencyList implements Representation {
     public boolean addNode(Node x) {
 
 
+
         return false;
     }
 
     @Override
     public boolean removeNode(Node x) {
+
 
 
         return false;
@@ -86,9 +103,17 @@ public class AdjacencyList implements Representation {
     @Override
     public boolean addEdge(Edge x) {
 
+        if(adjacencyList.containsKey(x.getFrom())) {
+            if(adjacencyList.get(x.getFrom()).contains(x)){
+                return false;
+            }
+            adjacencyList.get(x.getFrom()).add(x);
+        }
+        else {
+            adjacencyList.put(x.getFrom(), Lists.newArrayList(x));
+        }
 
-
-        return false;
+        return true;
     }
 
     @Override
@@ -106,7 +131,8 @@ public class AdjacencyList implements Representation {
         for (Edge e: edges) {
             if (from.equals(e.getFrom()) && to.equals(e.getTo())) {
                 distance = e.getValue();
-                System.out.println(distance);
+
+                return distance;
             }
         }
 

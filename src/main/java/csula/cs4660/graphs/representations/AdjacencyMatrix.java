@@ -29,6 +29,17 @@ public class AdjacencyMatrix implements Representation {
             nodes = new Node[size];
 
 
+            adjacencyMatrix = new int[size][size];
+
+            while (scanner.hasNextLine()) {
+
+                String line = scanner.nextLine();
+
+
+
+            }
+
+
         }
         catch(FileNotFoundException e){
             e.printStackTrace();
