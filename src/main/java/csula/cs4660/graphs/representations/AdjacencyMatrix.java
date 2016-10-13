@@ -35,8 +35,6 @@ public class AdjacencyMatrix implements Representation {
 
                 String line = scanner.nextLine();
 
-
-
             }
 
 
