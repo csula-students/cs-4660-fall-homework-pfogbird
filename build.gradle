@@ -19,14 +19,4 @@ dependencies {
 test {
     // show standard out and standard error of the test JVM(s) on the console
     testLogging.showStandardStreams = true
-<<<<<<< HEAD
 }
-=======
-}
-
-task wgcfGame(type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-
-    main = 'csula.cs4660.games.WGCFGame'
-}
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
