@@ -4,16 +4,13 @@ import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
 
 import java.io.File;
-<<<<<<< HEAD
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-=======
 import java.util.Collection;
 import java.util.List;
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
 import java.util.Optional;
 
 /**
@@ -23,7 +20,6 @@ import java.util.Optional;
  * TODO: Please fill the body of methods in this class
  */
 public class ObjectOriented implements Representation {
-<<<<<<< HEAD
 
     private List<Node> nodes;
     private List<Edge> edges;
@@ -63,7 +59,7 @@ public class ObjectOriented implements Representation {
 
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
-=======
+
     private Collection<Node> nodes;
     private Collection<Edge> edges;
 
@@ -71,13 +67,13 @@ public class ObjectOriented implements Representation {
     }
 
     public ObjectOriented() {
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
 
     }
 
     @Override
     public boolean adjacent(Node x, Node y) {
-<<<<<<< HEAD
+
 
         for(Edge edge: edges){
             if(edge.getFrom().equals(x) && edge.getTo().equals(y)){
@@ -85,14 +81,13 @@ public class ObjectOriented implements Representation {
             }
         }
 
-=======
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
         return false;
     }
 
     @Override
     public List<Node> neighbors(Node x) {
-<<<<<<< HEAD
+
 
         ArrayList<Node> neighborNodes = new ArrayList<>();
 
@@ -103,14 +98,14 @@ public class ObjectOriented implements Representation {
         }
 
         return neighborNodes;
-=======
+
         return null;
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
     }
 
     @Override
     public boolean addNode(Node x) {
-<<<<<<< HEAD
+
 
         if(nodes.contains(x)){
             return false;
@@ -119,14 +114,12 @@ public class ObjectOriented implements Representation {
         nodes.add(x);
 
         return true;
-=======
-        return false;
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
     }
 
     @Override
     public boolean removeNode(Node x) {
-<<<<<<< HEAD
+
         if(!nodes.contains(x)){
             return false;
         }
@@ -140,14 +133,14 @@ public class ObjectOriented implements Representation {
         }
 
         return nodes.remove(x);
-=======
+
         return false;
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
     }
 
     @Override
     public boolean addEdge(Edge x) {
-<<<<<<< HEAD
+
 
         if(!nodes.contains(x.getFrom())){
             nodes.add(x.getFrom());
@@ -164,26 +157,23 @@ public class ObjectOriented implements Representation {
         edges.add(x);
 
        return true;
-=======
+
         return false;
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
     }
 
     @Override
     public boolean removeEdge(Edge x) {
-<<<<<<< HEAD
+
 
 
 
         return edges.remove(x);
-=======
-        return false;
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
     }
 
     @Override
     public int distance(Node from, Node to) {
-<<<<<<< HEAD
+
 
         int distance = 0;
 
@@ -205,7 +195,7 @@ public class ObjectOriented implements Representation {
         return null;
     }
 }
-=======
+
         return 0;
     }
 
@@ -214,4 +204,4 @@ public class ObjectOriented implements Representation {
         return null;
     }
 }
->>>>>>> 808e64f7f416e6a7be304c2d5d49ae1069290414
+
