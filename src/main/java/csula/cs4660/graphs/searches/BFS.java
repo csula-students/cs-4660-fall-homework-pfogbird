@@ -12,14 +12,17 @@ import java.util.*;
 public class BFS implements SearchStrategy {
 
     @Override
-    public List<Edge> search(Graph graph, Node source, Node dist) {
+    public ArrayList<Edge> search(Graph graph, Node source, Node dist) {
 
         Queue queue = new LinkedList<Node>();
-        List<Node> result = new ArrayList<>();
+        ArrayList<Node> result = new ArrayList<Node>();
         HashMap<Node, Node> nodeTracker = new HashMap<>();
         List<Node> accumulator = new ArrayList<>();
+        ArrayList<Edge> resultEdges = new ArrayList<Edge>();
 
-        Node end;
+        Node end = null;
+
+        queue.add(source);
 
         while(!queue.isEmpty()) {
             Node current = (Node)queue.poll();
@@ -45,21 +48,33 @@ public class BFS implements SearchStrategy {
                     queue.add(node);
                     accumulator.add(node);
 
-
                 }
 
             }
 
         }
 
-        while () {
+        while (!end.equals(source)) {
 
-
+            Node parent = nodeTracker.get(end);
+            Edge edge = new Edge(parent, end, graph.distance(parent, end));
+            resultEdges.add(edge);
+            end = parent;
 
         }
 
+        ArrayList<Edge> reverse = new ArrayList<Edge>();
 
-        return null;
+        int temp = resultEdges.size();
+
+        for (int i = 0; i < resultEdges.size(); i++) {
+
+            reverse.add(resultEdges.get(temp));
+            temp--;
+
+        }
+
+        return reverse;
     }
 
 }
