@@ -1,186 +1,188 @@
 package csula.cs4660.graphs.representations;
 
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Node;
+
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.File;
 import java.util.*;
-import csula.cs4660.graphs.Edge;
-import csula.cs4660.graphs.Node;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 /**
  * Adjacency list is probably the most common implementation to store the unknown
  * loose graph
- *
- * TODO: please implement the method body
  */
 public class AdjacencyList implements Representation {
-
-
-
     private Map<Node, List<Edge>> adjacencyList;
-    //private Multimap<Node, Edge> multiMap = ArrayListMultimap.create();
-    private ArrayList<Node> nodes = new ArrayList<>();
-    private ArrayList<Edge> edges = new ArrayList<>();
-
-    public AdjacencyList(File file) {
-        try {
-            Scanner scanner = new Scanner(file);
-            String [] members;
-            String line = scanner.nextLine();
-
-            while (scanner.hasNextLine()) {
-
-                line = scanner.nextLine();
-                members = line.split(":");
-                int weight = Integer.parseInt(members[2]);
-
-                Node fromNode = new Node(Integer.parseInt(members[0]));
-                Node toNode = new Node(Integer.parseInt(members[1]));
-
-                nodes.add(fromNode);
-                nodes.add(toNode);
-                Edge edge = new Edge(fromNode,toNode,weight);
-
-                addEdge(edge);
-
-            }
-
-        }
-        catch(FileNotFoundException e) {
-            System.out.println("There was an error.");
-        }
-
-    }
 
     protected AdjacencyList() {
         adjacencyList = new HashMap<>();
-
-    private Map<Node, Collection<Edge>> adjacencyList;
-
-    protected AdjacencyList(File file) {
     }
 
-    protected AdjacencyList() {
+    protected AdjacencyList(File file) {
+        adjacencyList = new HashMap<>();
 
+        try {
+            Scanner in = new Scanner(file);
+
+            // to skip the first line
+            in.nextLine();
+
+            // reading edges line by line
+            while (in.hasNextLine()) {
+                String line = in.nextLine();
+                int[] parts = Arrays.stream(
+                        line.split(":")
+                ).mapToInt(Integer::parseInt)
+                        .toArray();
+                Edge edge = new Edge(
+                        new Node<>(parts[0]),
+                        new Node<>(parts[1]),
+                        parts[2]
+                );
+
+                addEdge(edge);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void debugPrint() {
+        for (Map.Entry<Node, List<Edge>> entry : adjacencyList.entrySet()) {
+            String result = entry.getKey().toString() + ":";
+
+            for (Edge edge : entry.getValue()) {
+                result += edge.toString() + ",";
+            }
+
+            System.out.println(result);
+        }
+    }
+
+    private boolean containNode(Node node) {
+        // FIXME: maybe there is better way to check if node exists
+        // to check if the node lives in any edge values
+        for (Map.Entry<Node, List<Edge>> entry : adjacencyList.entrySet()) {
+            for (Edge edge : entry.getValue()) {
+                if (edge.getTo().equals(node)) {
+                    return true;
+                }
+            }
+        }
+
+        // to check node exists as key
+        return adjacencyList.containsKey((node));
 
     }
 
     @Override
     public boolean adjacent(Node x, Node y) {
-
         boolean result = false;
 
-        for (Edge e: adjacencyList.get(x)) {
-
-            result = result || e.getTo().equals(y);
-
+        for (Edge edge : adjacencyList.get(x)) {
+            result = result || edge.getTo().equals(y);
         }
 
         return result;
     }
 
     @Override
-    public ArrayList<Node> neighbors(Node x) {
+    public List<Node> neighbors(Node x) {
         if (!adjacencyList.containsKey(x)) {
             return new ArrayList<>();
         }
 
-        List<Node> result = new ArrayList<>();
+        List<Node> result = Lists.newArrayList();
 
+        result.addAll(adjacencyList.get(x)
+                .stream()
+                .map(Edge::getTo).collect(Collectors.toList()));
 
-
-
-        return false;
-    }
-
-    @Override
-    public List<Node> neighbors(Node x) {
-
-        return null;
+        return result;
     }
 
     @Override
     public boolean addNode(Node x) {
+        if (containNode(x)) {
+            return false;
+        }
 
+        adjacencyList.put(x, Lists.newArrayList());
 
-
-
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean removeNode(Node x) {
+        if (!containNode(x)) {
+            return false;
+        }
 
+        // remove node as key
+        adjacencyList.remove(x);
 
+        // remove node from any edge that contains this node
+        for (Map.Entry<Node, List<Edge>> entry : adjacencyList.entrySet()) {
+            entry.getValue()
+                    .stream()
+                    .filter(edge -> edge.getTo().equals(x))
+                    .forEach(edge -> {
+                        List<Edge> copyList = new ArrayList<>(entry.getValue());
+                        copyList.remove(edge);
+                        adjacencyList.replace(entry.getKey(), copyList);
+                    });
+        }
 
-
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean addEdge(Edge x) {
-
-
-        if(adjacencyList.containsKey(x.getFrom())) {
-            if(adjacencyList.get(x.getFrom()).contains(x)){
+        // fromNode, toNode, edgeValue
+        if (adjacencyList.containsKey(x.getFrom())) {
+            if (adjacencyList.get(x.getFrom()).contains(x)) {
                 return false;
             }
+
             adjacencyList.get(x.getFrom()).add(x);
-        }
-        else {
+        } else {
             adjacencyList.put(x.getFrom(), Lists.newArrayList(x));
         }
 
         return true;
-
     }
 
     @Override
     public boolean removeEdge(Edge x) {
-
-
-        return adjacencyList.get(x.getFrom()).remove(x);
-
+        return adjacencyList.get(x.getFrom())
+                .remove(x);
     }
 
     @Override
     public int distance(Node from, Node to) {
+        if (!adjacencyList.containsKey(from)) {
+            return 0;
+        }
 
-
-        int distance = 0;
-
-        for (Edge e: edges) {
-            if (from.equals(e.getFrom()) && to.equals(e.getTo())) {
-                distance = e.getValue();
-
-                return distance;
+        for (Edge edge : adjacencyList.get(from)) {
+            if (edge.getTo().equals(to)) {
+                return edge.getValue();
             }
         }
 
-        return distance;
-
+        return 0;
     }
 
     @Override
     public Optional<Node> getNode(int index) {
-
-
-
-
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "";
     }
 }
