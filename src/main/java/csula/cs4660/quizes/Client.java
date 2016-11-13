@@ -21,8 +21,8 @@ public class Client {
     static {
         Unirest.setObjectMapper(new ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
-                = new com.fasterxml.jackson.databind.ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                    = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             public <T> T readValue(String value, Class<T> valueType) {
                 try {
@@ -46,8 +46,8 @@ public class Client {
         HttpResponse<State> response = null;
         try {
             response = Unirest.post(String.format("%s/getState", SERVER_URL))
-                .body(new DTO().setId(id))
-                .asObject(State.class);
+                    .body(new DTO().setId(id))
+                    .asObject(State.class);
         } catch (UnirestException e) {
             e.printStackTrace();
         }
@@ -63,8 +63,8 @@ public class Client {
         HttpResponse<DTO> response = null;
         try {
             response = Unirest.post(String.format("%s/state", SERVER_URL))
-                .body(new DTO().setId(id).setAction(action))
-                .asObject(DTO.class);
+                    .body(new DTO().setId(id).setAction(action))
+                    .asObject(DTO.class);
         } catch (UnirestException e) {
             e.printStackTrace();
         }
