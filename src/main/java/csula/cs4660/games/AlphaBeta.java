@@ -6,6 +6,11 @@ import csula.cs4660.graphs.Node;
 public class AlphaBeta {
     public static Node getBestMove(Graph graph, Node source, Integer depth, Integer alpha, Integer beta, Boolean max) {
         // TODO: implement your alpha beta pruning algorithm here
-        return null;
+
+        Node move = null;
+
+
+
+        return move;
     }
 }

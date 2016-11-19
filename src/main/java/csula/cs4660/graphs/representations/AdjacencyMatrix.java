@@ -6,10 +6,8 @@ import csula.cs4660.graphs.Node;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+
 
 /**
  * Adjacency matrix in a sense store the nodes in two dimensional array
@@ -221,7 +219,19 @@ public class AdjacencyMatrix implements Representation {
 
     @Override
     public Optional<Node> getNode(Node node) {
-        return null;
+        Iterator<Node> iterator = Arrays.asList(nodes).iterator();
+        Optional<Node> result = Optional.empty();
+        while(iterator.hasNext()) {
+            Node next = iterator.next();
+            if(next.equals(node)) {
+
+               result = Optional.of(next);
+
+            }
+
+        }
+
+        return result;
     }
 
     @Override

@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Adjacency list is probably the most common implementation to store the unknown
@@ -182,7 +185,15 @@ public class AdjacencyList implements Representation {
 
     @Override
     public Optional<Node> getNode(Node node) {
-        return null;
+        Iterator<Node> iterator = adjacencyList.keySet().iterator();
+        Optional<Node> result = Optional.empty();
+              while (iterator.hasNext()) {
+                  Node next = iterator.next();
+                  if (next.equals(node)) {
+                      result = Optional.of(next);
+                  }
+              }
+        return result;
     }
 
     @Override

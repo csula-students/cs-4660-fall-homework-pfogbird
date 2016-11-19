@@ -144,7 +144,20 @@ public class ObjectOriented implements Representation {
 
     @Override
     public Optional<Node> getNode(Node node) {
-        return null;
+        Iterator<Node> iterator = nodes.iterator();
+        Optional<Node> result = Optional.empty();
+
+        while (iterator.hasNext()) {
+            Node next = iterator.next();
+            if(next.equals(node)) {
+
+                result = Optional.of(next);
+
+            }
+
+        }
+
+        return result;
     }
 
     @Override
