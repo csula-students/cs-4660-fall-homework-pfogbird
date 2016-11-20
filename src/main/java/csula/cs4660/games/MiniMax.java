@@ -27,12 +27,12 @@ public class MiniMax {
         if (max) {
             bestValue = Integer.MIN_VALUE;
 
-            for (Node currNode: graph.neighbors(root)) {
+            for (Node currNode : graph.neighbors(root)) {
 
                 currNode = getBestMove(graph, root, depth - 1, false);
                 bestValue = Math.max(bestValue, (Integer) currNode.getData());
-                index = (Integer) currNode.getData();
-                //index++;
+                index++;
+
             }
             currState = new MiniMaxState(index, bestValue);
 
@@ -40,16 +40,15 @@ public class MiniMax {
 
             return move;
 
-        }
-        else {
+        } else {
             bestValue = Integer.MAX_VALUE;
 
-            for (Node currNode: graph.neighbors(root)) {
+            for (Node currNode : graph.neighbors(root)) {
 
                 currNode = getBestMove(graph, root, depth - 1, true);
                 bestValue = Math.min(bestValue, (Integer) currNode.getData());
-                index = (Integer) currNode.getData();
-                //index++;
+                index++;
+
             }
             currState = new MiniMaxState(index, bestValue);
 
