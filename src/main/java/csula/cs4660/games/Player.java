@@ -20,8 +20,8 @@ class Player {
 
     static GridBoard grid = new GridBoard(numX, numY);
 
-    static PlayerPosition player1 = new PlayerPosition(0);
-    static PlayerPosition player2 = new PlayerPosition(1);
+    static PlayerPosition player1 = new PlayerPosition(0, null, null, null, null);
+    static PlayerPosition player2 = new PlayerPosition(1, null, null, null, null);
 
     static PlayerPosition myPlayer;
     static PlayerPosition opponent;
@@ -52,14 +52,14 @@ class Player {
 
             if (player1.equals(myPlayer(P, player1)) && player2.equals(notMyPlayer(P, player2))) {
 
-                myPlayer.equals(new PlayerPosition(player1));
-                opponent.equals(new PlayerPosition(player2));
+                myPlayer = new PlayerPosition(player1);
+                opponent = new PlayerPosition(player2);
 
             }
             else if (player2.equals(myPlayer(P, player2)) && player1.equals(notMyPlayer(P, player1))) {
 
-                myPlayer.equals(new PlayerPosition(player2));
-                opponent.equals(new PlayerPosition(player1));
+                myPlayer = new PlayerPosition(player2);
+                opponent = new PlayerPosition(player1);
 
             }
 
