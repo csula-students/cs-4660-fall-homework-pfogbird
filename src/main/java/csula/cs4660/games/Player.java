@@ -1,8 +1,7 @@
 package csula.cs4660.games;
 
 import java.util.*;
-import java.io.*;
-import java.math.*;
+
 
 /**
  * Auto-generated code below aims at helping you parse
@@ -10,28 +9,37 @@ import java.math.*;
  **/
 class Player {
 
-    static final Integer numRows = 20;
-    static final Integer numCols = 30;
-    static final Integer rowMinBound = 0;
-    static final Integer rowMaxBound = 19;
-    static final Integer colMinBound = 0;
-    static final Integer colMaxBound = 29;
+    static final Integer numX = 30;
+    static final Integer numY = 20;
 
-    static GridBoard grid = new GridBoard(numRows, numCols);
+    static final Integer xMinBound = 0;
+    static final Integer xMaxBound = 29;
+
+    static final Integer yMinBound = 0;
+    static final Integer yMaxBound = 19;
+
+    static GridBoard grid = new GridBoard(numX, numY);
 
     static PlayerPosition player1 = new PlayerPosition(0);
     static PlayerPosition player2 = new PlayerPosition(1);
 
-    static PlayerPosition myPlayer = null;
-    static PlayerPosition opponent = null;
+    static PlayerPosition myPlayer;
+    static PlayerPosition opponent;
+
 
     static ArrayList<PlayerPosition> players = new ArrayList<>();
 
-    public static void main(String args[]) {
-        String move = "LEFT";
+    static Map<Integer, Integer> bfsPath = new LinkedHashMap<>();
+    static Map<Integer, Integer> dfsPath = new LinkedHashMap<>();
 
-        players.add(player1);
-        players.add(player2);
+
+    static final String[] directions = {"UP", "DOWN", "LEFT", "RIGHT"};
+
+    public static void main(String args[]) {
+        String move;
+
+        players.add(myPlayer);
+        players.add(opponent);
 
         fillBoard(grid);
 
@@ -42,51 +50,73 @@ class Player {
             int N = in.nextInt(); // total number of players (2 to 4).
             int P = in.nextInt(); // your player number (0 to 3).
 
+            if (player1.equals(myPlayer(P, player1)) && player2.equals(notMyPlayer(P, player2))) {
+
+                myPlayer.equals(new PlayerPosition(player1));
+                opponent.equals(new PlayerPosition(player2));
+
+            }
+            else if (player2.equals(myPlayer(P, player2)) && player1.equals(notMyPlayer(P, player1))) {
+
+                myPlayer.equals(new PlayerPosition(player2));
+                opponent.equals(new PlayerPosition(player1));
+
+            }
+
+
             for (int i = 0; i < N; i++) {
                 int X0 = in.nextInt(); // starting X coordinate of lightcycle (or -1)
                 int Y0 = in.nextInt(); // starting Y coordinate of lightcycle (or -1)
                 int X1 = in.nextInt(); // starting X coordinate of lightcycle (can be the same as X0 if you play before this player)
                 int Y1 = in.nextInt(); // starting Y coordinate of lightcycle (can be the same as Y0 if you play before this player)
 
-                if (i == 0) {
 
-                    player1.setXStart(X0);
-                    player1.setXCurr(X1);
-                    player1.setYStart(Y0);
-                    player1.setYCurr(Y1);
+                if (i == P) {
 
-                }
-                else if (i == 1) {
+                    myPlayer.setXStart(X0);
+                    myPlayer.setXCurr(X1);
+                    myPlayer.setYStart(Y0);
+                    myPlayer.setYCurr(Y1);
 
-                    player2.setXStart(X0);
-                    player2.setXCurr(X1);
-                    player2.setYStart(Y0);
-                    player2.setYCurr(Y1);
+                    grid.grid[myPlayer.getXStart()][myPlayer.getYStart()] = 1;
+                    grid.grid[myPlayer.getXCurr()][myPlayer.getYCurr()] = 1;
 
                 }
+                else if (i != P) {
 
+                    opponent.setXStart(X0);
+                    opponent.setXCurr(X1);
+                    opponent.setYStart(Y0);
+                    opponent.setYCurr(Y1);
 
-                grid.grid[X0][Y0] = 1;
-                grid.grid[X1][Y1] = 1;
+                    grid.grid[opponent.getXStart()][opponent.getYStart()] = 2;
+                    grid.grid[opponent.getXCurr()][opponent.getYCurr()] = 2;
+
+                }
+
+                System.err.println("my player");
+                System.err.println(myPlayer.getXStart());
+                System.err.println(myPlayer.getYStart());
+                System.err.println(myPlayer.getXCurr());
+                System.err.println(myPlayer.getYCurr());
+
+                System.err.println();
+
+                System.err.println("opponent");
+                System.err.println(opponent.getXStart());
+                System.err.println(opponent.getYStart());
+                System.err.println(opponent.getXCurr());
+                System.err.println(opponent.getYCurr());
+
+                System.err.println();
+
 
             }
 
-            if (player1.equals(myPlayer(P, player1)) && player2.equals(notMyPlayer(P, player2))) {
 
-                myPlayer = new PlayerPosition(player1);
-                opponent = new PlayerPosition(player2);
-
-            }
-            else if (player2.equals(myPlayer(P, player2)) && player1.equals(notMyPlayer(P, player1))) {
-
-                myPlayer = new PlayerPosition(player2);
-                opponent = new PlayerPosition(player1);
-
-            }
 
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");
-
 
 
             System.out.println("LEFT"); // A single line with UP, DOWN, LEFT or RIGHT
@@ -94,23 +124,27 @@ class Player {
 
     }
 
-    /*Depth and breath first search
+    //depth and breadth first search
 
-    public static void DFS(){
+    public static Map<Integer, Integer> DFS(PlayerPosition currPlayer) {
+        Map<Integer, Integer> openPath = new LinkedHashMap<>();
 
 
+
+        return openPath;
     }
 
 
-    public static void BFS(){
+    public static Map<Integer, Integer> BFS(PlayerPosition currPlayer) {
+        Map<Integer, Integer> openPath = new LinkedHashMap<>();
 
 
+
+        return openPath;
     }
 
 
-    */
-
-    public boolean aboutToCrash(GridBoard gameBoard, PlayerPosition player, PlayerPosition opponent) {
+    public boolean aboutToCrash(PlayerPosition player, PlayerPosition opponent) {
         boolean aboutToCrash = false;
 
 
@@ -118,7 +152,7 @@ class Player {
         return aboutToCrash;
     }
 
-    public static String whatStrategyToUse(GridBoard gameBoard, PlayerPosition player, PlayerPosition opponent){
+    public static String whatStrategyToUse(PlayerPosition player, PlayerPosition opponent){
         String stratgey = null;
 
 
@@ -127,7 +161,7 @@ class Player {
     }
 
     //MonteCarlo
-    public static String monteCarlo(GridBoard gameBoard, PlayerPosition player, PlayerPosition opponent) {
+    public static String monteCarlo(PlayerPosition player, PlayerPosition opponent) {
         String move = null;
 
 
@@ -137,7 +171,7 @@ class Player {
 
 
     //MINIMAX
-    public static String miniMax(GridBoard gameBoard, PlayerPosition player, PlayerPosition opponent){
+    public static String miniMax(PlayerPosition player, PlayerPosition opponent){
         String move = null;
 
 
@@ -146,7 +180,7 @@ class Player {
     }
 
     //flood fill, wall hugging
-    public static String floodFill(GridBoard gameBoard, PlayerPosition player, PlayerPosition opponent) {
+    public static String floodFill(PlayerPosition player, PlayerPosition opponent) {
         String move = null;
 
 
@@ -154,10 +188,21 @@ class Player {
         return move;
     }
 
-    public static String wallHug(GridBoard gameBoard, PlayerPosition player, PlayerPosition opponent){
+    public static String wallHug(PlayerPosition player){
         String move = null;
 
-
+        if (player.xPosCurr == xMinBound) {
+            move = directions[3]; //right
+        }
+        else if (player.xPosCurr == xMaxBound) {
+            move = directions[2]; //left
+        }
+        else if (player.yPosCurr == yMinBound) {
+            move = directions[1]; //down
+        }
+        else if (player.yPosCurr == yMaxBound) {
+            move = directions[0]; //up
+        }
 
         return move;
     }
@@ -184,38 +229,49 @@ class Player {
 
     }
 
-    public static boolean isEmpty(GridBoard currGrid, Integer xPos, Integer yPos){
+    public static boolean isEmpty(Integer xPos, Integer yPos){
         boolean isEmpty = false;
 
-        if (currGrid.grid[xPos][yPos] == 0){
+        if (grid.grid[xPos][yPos] == 0){
             isEmpty = true;
         }
-        else if (currGrid.grid[xPos][yPos] != 0) {
+        else if (grid.grid[xPos][yPos] != 0) {
             isEmpty = false;
         }
 
         return isEmpty;
     }
 
-    public static boolean isTaken(GridBoard currGrid, Integer xPos, Integer yPos) {
+    public static boolean isTaken(Integer xPos, Integer yPos) {
         boolean isTaken = false;
 
-        if (currGrid.grid[xPos][yPos] != 0){
+        if (grid.grid[xPos][yPos] != 0){
             isTaken = true;
         }
-        else if (currGrid.grid[xPos][yPos] == 0) {
+        else if (grid.grid[xPos][yPos] == 0) {
             isTaken = false;
         }
 
         return isTaken;
     }
 
-    public static void fillBoard(GridBoard currGrid){
+    public static void fillBoard(GridBoard grid){
 
-        for (int i = 0; i < currGrid.row; i++) {
-            for (int j = 0; j < currGrid.col; j++) {
-                currGrid.grid[i][j] = 0;
+        for (int i = 0; i < grid.x; i++) {
+            for (int j = 0; j < grid.y; j++) {
+                grid.grid[i][j] = 0;
             }
+        }
+
+    }
+
+    public static void printBoard(GridBoard grid){
+
+        for (int i = 0; i < grid.x; i++) {
+            for (int j = 0; j < grid.y; j++) {
+                System.err.println(grid.grid[i][j]);
+            }
+            System.err.println();
         }
 
     }
@@ -226,32 +282,32 @@ class Player {
 class GridBoard {
 
     Integer grid[][];
-    Integer row;
-    Integer col;
+    Integer x;
+    Integer y;
 
     public GridBoard() {}
 
     public GridBoard(GridBoard grid){
 
-        this(grid.getGrid(), grid.getRow(), grid.getCol());
+        this(grid.getGrid(), grid.getX(), grid.getY());
 
     }
 
-    public GridBoard(Integer row, Integer col) {
+    public GridBoard(Integer x, Integer y) {
 
         super();
-        this.row = row;
-        this.col = col;
-        this.grid = new Integer [this.row][this.col];
+        this.x = x;
+        this.y = y;
+        this.grid = new Integer [this.x][this.y];
 
     }
 
-    public GridBoard(Integer[][] grid, Integer row, Integer col) {
+    public GridBoard(Integer[][] grid, Integer x, Integer y) {
 
         super();
         this.grid = grid;
-        this.row = row;
-        this.col = col;
+        this.x = x;
+        this.y = y;
 
     }
 
@@ -260,14 +316,14 @@ class GridBoard {
         return grid;
     }
 
-    public Integer getRow(){
+    public Integer getX(){
 
-        return row;
+        return x;
     }
 
-    public Integer getCol(){
+    public Integer getY(){
 
-        return col;
+        return y;
     }
 
 }
