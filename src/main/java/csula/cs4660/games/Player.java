@@ -2,7 +2,6 @@ package csula.cs4660.games;
 
 import java.util.*;
 
-
 /**
  * Auto-generated code below aims at helping you parse
  * the standard input according to the problem statement.
@@ -36,7 +35,7 @@ class Player {
     static final String[] directions = {"UP", "DOWN", "LEFT", "RIGHT"};
 
     public static void main(String args[]) {
-        String move;
+        String move = "LEFT";
 
         players.add(myPlayer);
         players.add(opponent);
@@ -54,12 +53,14 @@ class Player {
 
                 myPlayer = new PlayerPosition(player1);
                 opponent = new PlayerPosition(player2);
+                //continue;
 
             }
             else if (player2.equals(myPlayer(P, player2)) && player1.equals(notMyPlayer(P, player1))) {
 
                 myPlayer = new PlayerPosition(player2);
                 opponent = new PlayerPosition(player1);
+                //	continue;
 
             }
 
@@ -80,6 +81,7 @@ class Player {
 
                     grid.grid[myPlayer.getXStart()][myPlayer.getYStart()] = 1;
                     grid.grid[myPlayer.getXCurr()][myPlayer.getYCurr()] = 1;
+                    //continue;
 
                 }
                 else if (i != P) {
@@ -91,6 +93,7 @@ class Player {
 
                     grid.grid[opponent.getXStart()][opponent.getYStart()] = 2;
                     grid.grid[opponent.getXCurr()][opponent.getYCurr()] = 2;
+                    //	continue;
 
                 }
 
@@ -110,7 +113,7 @@ class Player {
 
                 System.err.println();
 
-
+                move = whatStrategyToUse(myPlayer, opponent);
             }
 
 
@@ -119,7 +122,7 @@ class Player {
             // To debug: System.err.println("Debug messages...");
 
 
-            System.out.println("LEFT"); // A single line with UP, DOWN, LEFT or RIGHT
+            System.out.println(move); // A single line with UP, DOWN, LEFT or RIGHT
         }
 
     }
@@ -147,17 +150,27 @@ class Player {
     public boolean aboutToCrash(PlayerPosition player, PlayerPosition opponent) {
         boolean aboutToCrash = false;
 
+        if (player.xPosCurr == opponent.xPosCurr-1 || player.xPosCurr == opponent.xPosCurr+1 || player.yPosCurr == opponent.yPosCurr-1 || player.yPosCurr == opponent.yPosCurr+1) {
+            return true;
 
+        }
 
         return aboutToCrash;
     }
 
     public static String whatStrategyToUse(PlayerPosition player, PlayerPosition opponent){
-        String stratgey = null;
+        String strategy = "LEFT";
 
+        if (player.xPosCurr == xMinBound || player.xPosCurr == xMaxBound || player.yPosCurr == yMinBound || player.yPosCurr == yMaxBound) {
 
+            strategy = wallHug(player, opponent);
 
-        return stratgey;
+        }
+        else{
+            strategy = wallHug(player, opponent);
+        }
+
+        return strategy;
     }
 
     //MonteCarlo
@@ -188,20 +201,51 @@ class Player {
         return move;
     }
 
-    public static String wallHug(PlayerPosition player){
-        String move = null;
+    public static String wallHug(PlayerPosition player, PlayerPosition opponent){
+        String move = "LEFT";
 
         if (player.xPosCurr == xMinBound) {
-            move = directions[3]; //right
+            if (player.yPosCurr+1 == opponent.yPosCurr){
+                move = directions[3]; //right
+
+            }
+            else if (player.xPosCurr+1 == opponent.xPosCurr && player.yPosCurr-1 != yMaxBound) {
+                move = directions[1];
+
+            }
         }
         else if (player.xPosCurr == xMaxBound) {
-            move = directions[2]; //left
+            if (player.yPosCurr-1 == opponent.yPosCurr) {
+                move = directions[2]; //left
+
+            }
+            else if (player.xPosCurr-1 == opponent.xPosCurr && player.yPosCurr+1 != yMinBound) {
+                move  = directions[0];
+
+            }
         }
         else if (player.yPosCurr == yMinBound) {
-            move = directions[1]; //down
+            if (player.xPosCurr+1 == opponent.xPosCurr) {
+                move = directions[1]; //down
+
+            }
+            else if (player.yPosCurr+1 == opponent.yPosCurr && player.xPosCurr-1 != xMaxBound) {
+                move = directions[3];
+
+            }
         }
         else if (player.yPosCurr == yMaxBound) {
-            move = directions[0]; //up
+            if (player.xPosCurr-1 == opponent.xPosCurr) {
+                move = directions[0]; //up
+
+            }
+            else if (player.yPosCurr-1 == opponent.yPosCurr && player.xPosCurr+1 != xMinBound) {
+                move = directions[2];
+
+            }
+        }
+        else {
+            move = "UP";
         }
 
         return move;
